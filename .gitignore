@@ -1,0 +1,6 @@
+.env
+go.sum
+node_modules/
+.idea/
+package-lock.json
+main.js
