@@ -1,4 +1,4 @@
-import {connect} from "amqplib";
+import { connect } from "amqplib";
 
 const producer = async () => {
     const connection = await connect({
@@ -9,7 +9,7 @@ const producer = async () => {
     });
 
     const channel = await connection.createChannel();
-    await channel.assertExchange("routing", "direct", {autoDelete: true})
+    await channel.assertExchange("routing", "direct", { autoDelete: false, durable: false })
     channel.publish("routing", "analytics_only", Buffer.from("Data should be analysed."))
     channel.publish("routing", "payment_only", Buffer.from('Buy some butter'));
     await channel.close()

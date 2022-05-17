@@ -1,4 +1,4 @@
-import {connect} from "amqplib";
+import { connect } from "amqplib";
 
 const payment_consumer = async () => {
     const connection = await connect({
@@ -9,8 +9,8 @@ const payment_consumer = async () => {
     });
 
     const channel = await connection.createChannel()
-    await channel.assertExchange("routing", "direct", {autoDelete: true})
-    await channel.assertQueue("payment", {autoDelete: true})
+    await channel.assertExchange("routing", "direct", { autoDelete: false, durable: false })
+    await channel.assertQueue("payment", { autoDelete: true })
     await channel.bindQueue("payment", "routing", "payment_only")
     await channel.consume("payment", message => {
         console.log(message?.content.toString());

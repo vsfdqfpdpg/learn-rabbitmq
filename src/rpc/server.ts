@@ -1,4 +1,4 @@
-import {connect} from "amqplib";
+import { connect } from "amqplib";
 
 const server = async () => {
     const connection = await connect({
@@ -9,12 +9,13 @@ const server = async () => {
     });
 
     const channel = await connection.createChannel()
-    await channel.assertQueue("request-queue", {autoDelete: true})
+    await channel.assertQueue("request-queue", { autoDelete: true })
 
     await channel.consume("request-queue", async message => {
-        channel.sendToQueue(message?.properties.replyTo, Buffer.from("Back to client"), {correlationId: message?.properties.correlationId})
+        console.log("Server consume: " + message?.properties.correlationId + ": " + message?.content);
+        channel.sendToQueue(message?.properties.replyTo, Buffer.from("Back to client"), { correlationId: message?.properties.correlationId })
         await channel.ack(message!)
-    }, {noAck: false})
+    }, { noAck: false })
 
 }
 
